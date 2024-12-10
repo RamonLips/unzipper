@@ -4,7 +4,7 @@ const unzipper = require('unzipper');
 
 const downloadsFolder = path.join(__dirname, 'data');
 const extractedFolder = path.join(__dirname, 'extracted');
-const deleteFiles = false
+const removeSourceAfterExtraction = false
 
 // Create the 'extracted' folder if it doesn't exist
 if (!fs.existsSync(extractedFolder)) {
@@ -40,7 +40,7 @@ const audioExtensions = ['.mp3', '.wav', '.flac', '.aac'];
 const videoExtensions = ['.mp4', '.avi', '.mkv', '.mov'];
 
 // Read all files in the downloads folder
-fs.readdir(downloadsFolder, (err, files) => {
+fs.readdir(downloadsFolder, async (err, files) => {
     if (err) {
         console.error('Error reading downloads folder:', err);
         return;
@@ -49,47 +49,54 @@ fs.readdir(downloadsFolder, (err, files) => {
     // Filter out the zip files
     const zipFiles = files.filter(file => path.extname(file) === '.zip');
 
-    // Extract each zip file
-    zipFiles.forEach(zipFile => {
+    // Extract each zip file concurrently
+    await Promise.all(zipFiles.map(async zipFile => {
         const zipFilePath = path.join(downloadsFolder, zipFile);
 
-        fs.createReadStream(zipFilePath)
-            .pipe(unzipper.Parse())
-            .on('entry', entry => {
-                let filePath;
-                if (entry.type === 'Directory') {
-                    entry.autodrain();
-                } else {
-                    const ext = path.extname(entry.path).toLowerCase();
-                    if (pictureExtensions.includes(ext)) {
-                        filePath = path.join(picturesFolder, path.basename(entry.path));
-                    } else if (documentExtensions.includes(ext)) {
-                        filePath = path.join(documentsFolder, path.basename(entry.path));
-                    } else if (audioExtensions.includes(ext)) {
-                        filePath = path.join(audioFolder, path.basename(entry.path));
-                    } else if (videoExtensions.includes(ext)) {
-                        filePath = path.join(videosFolder, path.basename(entry.path));
+        return new Promise((resolve, reject) => {
+            fs.createReadStream(zipFilePath)
+                .pipe(unzipper.Parse())
+                .on('entry', entry => {
+                    let filePath;
+                    if (entry.type === 'Directory') {
+                        entry.autodrain();
                     } else {
-                        filePath = path.join(otherFilesFolder, path.basename(entry.path));
-                    }
-                    entry.pipe(fs.createWriteStream(filePath));
-                }
-            })
-            .on('close', () => {
-                console.log(`Extracted ${zipFile}`);
-
-                if (deleteFiles) {
-                    fs.unlink(zipFilePath, err => {
-                        if (err) {
-                            console.error(`Error deleting ${zipFile}:`, err);
+                        const ext = path.extname(entry.path).toLowerCase();
+                        if (pictureExtensions.includes(ext)) {
+                            filePath = path.join(picturesFolder, path.basename(entry.path));
+                        } else if (documentExtensions.includes(ext)) {
+                            filePath = path.join(documentsFolder, path.basename(entry.path));
+                        } else if (audioExtensions.includes(ext)) {
+                            filePath = path.join(audioFolder, path.basename(entry.path));
+                        } else if (videoExtensions.includes(ext)) {
+                            filePath = path.join(videosFolder, path.basename(entry.path));
                         } else {
-                            console.log(`Deleted ${zipFile}`);
+                            filePath = path.join(otherFilesFolder, path.basename(entry.path));
                         }
-                    });
-                }
-            })
-            .on('error', err => {
-                console.error(`Error extracting ${zipFile}:`, err);
-            });
-    });
+                        entry.pipe(fs.createWriteStream(filePath));
+                    }
+                })
+                .on('close', () => {
+                    console.log(`Extracted ${zipFile}`);
+
+                    if (removeSourceAfterExtraction) {
+                        fs.unlink(zipFilePath, err => {
+                            if (err) {
+                                console.error(`Error deleting ${zipFile}:`, err);
+                                reject(err);
+                            } else {
+                                console.log(`Deleted ${zipFile}`);
+                                resolve();
+                            }
+                        });
+                    } else {
+                        resolve();
+                    }
+                })
+                .on('error', err => {
+                    console.error(`Error extracting ${zipFile}:`, err);
+                    reject(err);
+                });
+        });
+    }));
 });
