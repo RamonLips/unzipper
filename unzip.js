@@ -2,9 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const unzipper = require('unzipper');
 
-const downloadsFolder = path.join(__dirname, 'data');
-const extractedFolder = path.join(__dirname, 'extracted');
-const removeSourceAfterExtraction = false
+const downloadsFolder = path.join(__dirname, process.env.DOWNLOAD_FOLDER || 'downloads');
+const extractedFolder = path.join(__dirname, process.env.EXTRACTED_FOLDER || 'extracted');
+const removeSourceAfterExtraction = process.env.REMOVE_ORIGINAL
 
 // Create the 'extracted' folder if it doesn't exist
 try {
