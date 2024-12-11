@@ -13,7 +13,7 @@ A simple and efficient **Node.js** script to extract ZIP files in bulk using [un
 
 ## How to Use
 1. Place your ZIP files in the designated input folder.
-2. Install all the dependencies
+2. Install all the dependencies.
    ```npm
    npm i
    ```
