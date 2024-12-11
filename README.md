@@ -1,19 +1,41 @@
-# Unzipper
+# ZIP File Extraction Script
 
-This script uses **Node.js** to extract ZIP files in bulk and sorts them.
+A simple and efficient **Node.js** script to extract ZIP files in bulk using [unzipper](https://www.npmjs.com/package/unzipper) and organize them into sorted folders.
 
 ---
 
-## How To Use?
+## Features
+- Bulk extraction of ZIP files.
+- Automatic organization into sorted folders.
+- Lightweight and easy to configure.
 
-1. Install the dependencies:
+---
+
+## How to Use
+1. Place your ZIP files in the designated input folder.
+2. Install all the dependencies
    ```npm
    npm i
    ```
-2. Running the script
+4. Run the script to extract and organize the files.
    ```node
-   node unzipper
+   node unzip
    ```
 
-## How to change variables
-Look in the .env file.
+---
+
+## Configuration
+Customize the script behavior by editing the `.env` file:
+- **DATA_FOLDER**: The path to the folder containing ZIP files.
+- **EXTRACT_FOLDER**: The path to the folder where extracted files will be stored.
+- **REMOVE_ORIGINAL**: To remove the original files from the data folder.
+
+---
+
+## Notes
+- Ensure the required dependencies are installed before running the script.
+- The script will automatically create output folders if they don’t exist.
+
+---
+
+This structure offers clear sections for different types of users, whether they need to understand the features, usage, or setup. Would you like me to incorporate this into your document?
