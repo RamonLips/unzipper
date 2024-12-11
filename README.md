@@ -13,4 +13,7 @@ This script uses **Node.js** to extract ZIP files in bulk and sorts them.
 2. Running the script
    ```node
    node unzipper
-   ``` 
+   ```
+
+## How to change variables
+Look in the .env file.
