@@ -1,6 +1,6 @@
 # ZIP File Extraction Script
 
-A simple and efficient **Node.js** script to extract ZIP files in bulk using [unzipper](https://www.npmjs.com/package/unzipper) and organize them into sorted folders.
+A simple and efficient **Node.js** script to extract ZIP files in bulk using <a href="https://www.npmjs.com/package/unzipper" target="_blank">unzipper</a> and organize them into sorted folders.
 
 ---
 
