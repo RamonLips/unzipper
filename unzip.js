@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const unzipper = require('unzipper');
 
-const downloadsFolder = path.join(__dirname, process.env.DOWNLOAD_FOLDER || 'downloads');
+const downloadsFolder = path.join(__dirname, process.env.DATA_FOLDER || 'data');
 const extractedFolder = path.join(__dirname, process.env.EXTRACTED_FOLDER || 'extracted');
 const removeSourceAfterExtraction = process.env.REMOVE_ORIGINAL
 
