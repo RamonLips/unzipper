@@ -35,5 +35,3 @@ Customize the script behavior by editing the `.env` file:
 ## Notes
 - Ensure the required dependencies are installed before running the script.
 - The script will automatically create output folders if they don’t exist.
-
----
