@@ -37,5 +37,3 @@ Customize the script behavior by editing the `.env` file:
 - The script will automatically create output folders if they don’t exist.
 
 ---
-
-This structure offers clear sections for different types of users, whether they need to understand the features, usage, or setup. Would you like me to incorporate this into your document?
